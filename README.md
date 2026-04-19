@@ -152,6 +152,8 @@ docker pull ghcr.io/skylush/telegram-music-bot:latest
 docker pull ghcr.io/skylush/telegram-music-bot:v1.0.1
 ```
 
+如果拉取时提示权限不足，先确认仓库和 GHCR 镜像是公开的；如果你在私人网络或企业环境里拉取，再执行一次 `docker login ghcr.io` 后重试。
+
 ## Debian 13 服务器部署
 
 ### 一键部署（推荐）
