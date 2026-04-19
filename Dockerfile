@@ -1,9 +1,14 @@
 FROM golang:1.23-alpine AS builder
 WORKDIR /app
+
+ARG TARGETOS=linux
+ARG TARGETARCH=amd64
+ARG TARGETVARIANT=
+
 COPY go.mod go.sum* ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /music-bot ./cmd/bot
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} GOARM=${TARGETVARIANT#v} go build -trimpath -ldflags="-s -w" -o /music-bot ./cmd/bot
 
 FROM alpine:3.21
 WORKDIR /app

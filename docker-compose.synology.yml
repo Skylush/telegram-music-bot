@@ -1,0 +1,12 @@
+services:
+  music-bot:
+    image: ghcr.io/skylush/telegram-music-bot:latest
+    container_name: telegram-music-bot
+    environment:
+      CONFIG_FILE: /app/config/config.yaml
+      BOT_TOKEN_FILE: /run/secrets/telegram-bot-token
+    volumes:
+      - ./config/config.yaml:/app/config/config.yaml:ro
+      - ./secrets/telegram-bot-token:/run/secrets/telegram-bot-token:ro
+      - ./data/downloads:/app/data/downloads
+    restart: unless-stopped

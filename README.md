@@ -66,14 +66,91 @@ make run
 
 ## Docker 部署
 
+### 方式一：本地 Docker / Docker Compose
+
+1. 准备目录并复制配置文件：
+
+```bash
+cp .env.example .env
+cp config/config.yaml.example config/config.yaml
+cp secrets/telegram-bot-token.example secrets/telegram-bot-token
+chmod 600 secrets/telegram-bot-token
+mkdir -p data/downloads
+```
+
+2. 编辑 `config/config.yaml`：
+
+- `bot_token_file` 建议保持为 `./secrets/telegram-bot-token`
+- `download_dir` 建议保持为 `./data/downloads`
+- `source_api_base_url` 可保持默认值
+- `source_order` 可先保持 `netease,kuwo,joox`
+
+3. 启动容器：
+
 ```bash
 docker compose build
 docker compose up -d
+docker compose logs -f
 ```
+
+### 方式二：先构建镜像，再在群晖导入
+
+如果你想先生成镜像文件再导入群晖，可在本地执行：
+
+```bash
+docker build -t telegram-music-bot:latest .
+```
+
+如果是苹果电脑、群晖 ARM 机型，建议使用 buildx 构建对应平台镜像；如果你的群晖是 x86_64，则把平台改成 `linux/amd64`：
+
+```bash
+docker buildx build --platform linux/arm64 -t telegram-music-bot:latest --load .
+# 或
+docker buildx build --platform linux/amd64 -t telegram-music-bot:latest --load .
+```
+
+群晖 Container Manager 导入时，建议挂载以下目录：
+
+- `./config/config.yaml` -> `/app/config/config.yaml`
+- `./secrets/telegram-bot-token` -> `/run/secrets/telegram-bot-token`
+- `./data/downloads` -> `/app/data/downloads`
 
 下载内容会保存到宿主机目录：
 
 - `./data/downloads`
+
+### 方式三：群晖 Container Manager 部署
+
+1. 在群晖上新建一个项目目录，例如 `/volume1/docker/telegram-music-bot`。
+2. 复制群晖专用编排文件 `docker-compose.synology.yml` 到这个目录。
+3. 再复制 `config/config.yaml.example` 为 `config/config.yaml`，复制 `secrets/telegram-bot-token.example` 为 `secrets/telegram-bot-token`。
+4. 将示例文件改名并填写真实配置，确保 token 文件里只有一行机器人 Token。
+5. 用 Container Manager 打开 `docker-compose.synology.yml` 并启动项目。
+6. 首次启动后，在日志里确认 Bot 已成功连接 Telegram。
+
+如果你想先在本地或 CI 构建镜像，再导入群晖，也可以直接使用 GHCR 上的镜像 `ghcr.io/skylush/telegram-music-bot:latest`。
+
+### 方式四：GitHub 自动构建镜像
+
+仓库已经配置了自动构建流程，文件是 [.github/workflows/docker-image.yml](.github/workflows/docker-image.yml)。
+
+它会在以下时机自动构建并推送镜像到 GHCR：
+
+- 推送到 `main`
+- 打 `v*` 标签
+- 手动在 GitHub Actions 页面点 `Run workflow`
+
+构建完成后可以直接拉取：
+
+```bash
+docker pull ghcr.io/skylush/telegram-music-bot:latest
+```
+
+如果你打了版本标签，比如 `v1.0.1`，也可以拉取对应版本镜像：
+
+```bash
+docker pull ghcr.io/skylush/telegram-music-bot:v1.0.1
+```
 
 ## Debian 13 服务器部署
 
@@ -192,3 +269,5 @@ Docker Compose 会自动挂载：
 - [CONTRIBUTING.md](CONTRIBUTING.md)
 - [CHANGELOG.md](CHANGELOG.md)
 - [GitHub Actions CI](.github/workflows/ci.yml)
+- [Docker 镜像构建](.github/workflows/docker-image.yml)
+- [群晖专用 Docker Compose](docker-compose.synology.yml)
