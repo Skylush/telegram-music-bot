@@ -171,3 +171,17 @@ Docker Compose 会自动挂载：
 
 - 音源下载可用性可能受版权与地区限制影响
 - 若部分歌曲无法下载，属于上游音源限制
+
+## 鸣谢与引用
+
+本项目的设计与实现参考了以下两个项目：
+
+- [akudamatata/Solara](https://github.com/akudamatata/Solara)
+- [XiaoMengXinX/Music163bot-Go](https://github.com/XiaoMengXinX/Music163bot-Go)
+
+主要借鉴内容包括：
+
+- Solara 的多音源聚合、搜索/播放/下载链路设计，以及可配置源顺序的思路
+- Music163bot-Go 的 Telegram Bot 命令分发、回调交互与下载流程组织方式
+
+如果你喜欢这个项目，也建议直接支持原始项目与其作者。
