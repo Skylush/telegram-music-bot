@@ -1,0 +1,17 @@
+# Copy to config/config.yaml before deployment
+
+bot_token_file: ./secrets/telegram-bot-token
+download_dir: ./data/downloads
+max_results: 5
+http_timeout_seconds: 20
+http_max_retries: 2
+log_level: info
+
+# 聚合源接口（兼容 Solara 方案）
+source_api_base_url: https://music-api.gdstudio.xyz/api.php
+
+# 源顺序：搜索和回退下载都会按这个顺序执行
+source_order:
+  - netease
+  - kuwo
+  - joox

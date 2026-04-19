@@ -1,0 +1,19 @@
+services:
+  music-bot:
+    build: .
+    container_name: telegram-music-bot
+    env_file:
+      - .env
+    volumes:
+      - ./config:/app/config:ro
+      - ./data/downloads:/app/data/downloads
+    secrets:
+      - telegram_bot_token
+    environment:
+      CONFIG_FILE: /app/config/config.yaml
+      BOT_TOKEN_FILE: /run/secrets/telegram-bot-token
+    restart: unless-stopped
+
+secrets:
+  telegram_bot_token:
+    file: ./secrets/telegram-bot-token
