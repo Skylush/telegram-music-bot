@@ -185,3 +185,10 @@ Docker Compose 会自动挂载：
 - Music163bot-Go 的 Telegram Bot 命令分发、回调交互与下载流程组织方式
 
 如果你喜欢这个项目，也建议直接支持原始项目与其作者。
+
+## 项目文件
+
+- [LICENSE](LICENSE)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [CHANGELOG.md](CHANGELOG.md)
+- [GitHub Actions CI](.github/workflows/ci.yml)
